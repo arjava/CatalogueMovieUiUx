@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_main"
+    android:orientation="vertical"
+    android:id="@+id/linearLayoutContentRecycler">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayoutContentMovie"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/imageViewItemMovie"
+            android:layout_width="100dp"
+            android:layout_height="150dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayoutItemTextMovie"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_main">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:id="@+id/textViemItemTitle"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:id="@+id/textViemItemDesc"
+                android:maxLines="3"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:id="@+id/textViemItemDate"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#000"
+        android:id="@+id/garisBawah"
+        android:layout_below="@+id/linearLayoutContentMovie"/>
+
+</LinearLayout>
