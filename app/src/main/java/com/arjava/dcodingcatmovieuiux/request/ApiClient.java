@@ -1,5 +1,7 @@
 package com.arjava.dcodingcatmovieuiux.request;
 
+import android.content.Context;
+
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -9,9 +11,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    static String BASE_URL = "https://api.themoviedb.org";
+    //url utama API
+    private static String BASE_URL = "https://api.themoviedb.org";
 
-    public static Retrofit getMovie() {
+    //converter to object
+    public static Retrofit getRetrofit(Context context) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)

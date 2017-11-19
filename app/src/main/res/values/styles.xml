@@ -17,4 +17,14 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="Theme.cataloguiux" parent="Theme.AppCompat.Light">
+        <item name="actionBarItemBackground">@color/actionBarItemBackground</item>
+        <item name="popupMenuStyle">@color/popupMenuStyle</item>
+        <item name="dropDownListViewStyle">@color/dropDownListviewStyle</item>
+        <item name="actionBarTabStyle">@color/actionBarTabStyle</item>
+        <item name="actionDropDownStyle">@color/actionDropDownStyle</item>
+        <item name="actionBarStyle">@color/actionBarStyle</item>
+        <item name="panelBackground">@color/panelBackground</item>
+    </style>
+
 </resources>

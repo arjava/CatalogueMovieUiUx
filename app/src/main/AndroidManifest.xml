@@ -21,6 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.DetailsMovie"
+            android:theme="@style/Theme.cataloguiux"/>
     </application>
 
 </manifest>

@@ -1,8 +1,14 @@
 package com.arjava.dcodingcatmovieuiux;
 
+import android.app.LoaderManager;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,16 +18,34 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
+import com.arjava.dcodingcatmovieuiux.model.MovieItems;
+import com.arjava.dcodingcatmovieuiux.request.ApiClient;
+import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
+
+
+import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private String TAG = MainActivity.class.getSimpleName();
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -40,6 +64,39 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        progressBar.setVisibility(View.VISIBLE);
+        loadMovieNow();
+    }
+
+    private void loadMovieNow() {
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        ApiInterface apiInterface = ApiClient.getRetrofit(getApplicationContext()).create(ApiInterface.class);
+        Call<MovieItems> call = apiInterface.getNowPlaying();
+        call.enqueue(new Callback<MovieItems>() {
+            //ketika server meresponse
+            @Override
+            public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
+                MovieItems data = response.body();
+                if (data.getResults().size()==0) {
+                    Toast.makeText(getApplicationContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                }else {
+                    recyclerView.setAdapter(new MovieAdapter(data.getResults(), R.layout.content_recycler, getApplicationContext()));
+                    Log.e(TAG, "onResponse: hasil pemanggilan"+ call);
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+
+            //ketika gagal mendapatkan response
+            @Override
+            public void onFailure(Call<MovieItems> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, t.toString());
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -48,7 +105,22 @@ public class MainActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+            alert.setMessage("Apa anda yakin Ingin Keluar ? ")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+            alert.create();
+            alert.show();
         }
     }
 
