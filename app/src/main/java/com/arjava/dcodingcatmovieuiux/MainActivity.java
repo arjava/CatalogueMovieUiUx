@@ -1,10 +1,12 @@
 package com.arjava.dcodingcatmovieuiux;
 
-import android.app.LoaderManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +24,15 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
+import com.arjava.dcodingcatmovieuiux.fragment.NowPlayingFragment;
+import com.arjava.dcodingcatmovieuiux.fragment.UpcomingFragment;
 import com.arjava.dcodingcatmovieuiux.model.MovieItems;
 import com.arjava.dcodingcatmovieuiux.request.ApiClient;
 import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
 
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import retrofit2.Call;
@@ -36,25 +43,23 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = MainActivity.class.getSimpleName();
-    ProgressBar progressBar;
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        progressBar = (ProgressBar) findViewById(R.id.progressBarMain);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        viewPager = (ViewPager) findViewById(R.id.viewPagers);
+        setupViewPager(viewPager);
+
+        tabLayout = (TabLayout) findViewById(R.id.tabsLyout);
+        tabLayout.setupWithViewPager(viewPager);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -64,39 +69,41 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        progressBar.setVisibility(View.VISIBLE);
-        loadMovieNow();
     }
 
-    private void loadMovieNow() {
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter.addFrag(new NowPlayingFragment(), getResources().getString(R.string.now_playing));
+        adapter.addFrag(new UpcomingFragment(), getResources().getString(R.string.upcoming));
+        viewPager.setAdapter(adapter);
+    }
 
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-        ApiInterface apiInterface = ApiClient.getRetrofit(getApplicationContext()).create(ApiInterface.class);
-        Call<MovieItems> call = apiInterface.getNowPlaying();
-        call.enqueue(new Callback<MovieItems>() {
-            //ketika server meresponse
-            @Override
-            public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
-                MovieItems data = response.body();
-                if (data.getResults().size()==0) {
-                    Toast.makeText(getApplicationContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
-                }else {
-                    recyclerView.setAdapter(new MovieAdapter(data.getResults(), R.layout.content_recycler, getApplicationContext()));
-                    Log.e(TAG, "onResponse: hasil pemanggilan"+ call);
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> fragmentList = new ArrayList<>();
+        private final List<String> stringList = new ArrayList<>();
 
-            //ketika gagal mendapatkan response
-            @Override
-            public void onFailure(Call<MovieItems> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, t.toString());
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        public int getCount() {
+            return fragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            fragmentList.add(fragment);
+            stringList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return stringList.get(position);
+        }
     }
 
     @Override

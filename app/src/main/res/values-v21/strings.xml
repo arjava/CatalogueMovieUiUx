@@ -2,4 +2,6 @@
 <resources>
     <string name="share">Share</string>
     <string name="detail">Detail</string>
+    <string name="upcoming">UpComing</string>
+    <string name="now_playing">Now Playing</string>
 </resources>
