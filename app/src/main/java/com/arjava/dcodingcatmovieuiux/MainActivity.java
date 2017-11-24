@@ -1,88 +1,120 @@
 package com.arjava.dcodingcatmovieuiux;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
+import com.arjava.dcodingcatmovieuiux.activity.AboutActivity;
+import com.arjava.dcodingcatmovieuiux.activity.ActivitySearchNav;
+import com.arjava.dcodingcatmovieuiux.activity.SearchActivity;
+import com.arjava.dcodingcatmovieuiux.activity.TopRatedActivity;
 import com.arjava.dcodingcatmovieuiux.fragment.NowPlayingFragment;
 import com.arjava.dcodingcatmovieuiux.fragment.UpcomingFragment;
-import com.arjava.dcodingcatmovieuiux.model.MovieItems;
-import com.arjava.dcodingcatmovieuiux.request.ApiClient;
-import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
-
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
 
-    private String TAG = MainActivity.class.getSimpleName();
-    private Toolbar toolbar;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
+    Toolbar toolbar;
+    TabLayout tabLayout;
+    ViewPager viewPager;
+    SearchView searchView;
+    NavigationView navigationView;
+    private DrawerLayout drawer;
+    public static String cari_film = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         ButterKnife.bind(this);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPagers);
+        viewPager = findViewById(R.id.viewPagers);
         setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabsLyout);
+        tabLayout = findViewById(R.id.tabsLyout);
         tabLayout.setupWithViewPager(viewPager);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        searchView = findViewById(R.id.search_name);
+        searchView.setOnQueryTextListener(this);
+        searchView.setQueryHint(getResources().getString(R.string.search));
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new NowPlayingFragment(), getResources().getString(R.string.now_playing));
-        adapter.addFrag(new UpcomingFragment(), getResources().getString(R.string.upcoming));
+        adapter.addFrag(new UpcomingFragment(), getResources().getString(R.string.up_coming));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String s) {
+        searchView.clearFocus();
+        if (s.isEmpty() || s.equals("."+","+"~"+"!"+"@"+"#"+"$"+"%"+"^"+"&"+"*"+"("+")"+"_"+"+"+"-"+"=")) {
+            Toast.makeText(getApplicationContext(), "tidak boleh kosong atau menggunakan karakter \n" +
+                    " . , ~ ! @ # $ % ^ & * ( ) _ + - =", Toast.LENGTH_SHORT).show();
+        }else{
+            Intent ts = new Intent(MainActivity.this, SearchActivity.class);
+            ts.putExtra("cari_film", s);
+            startActivity(ts);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        getIntent().putExtra("cari_film", s);
+
+        if(s.length() > 15){
+            Toast.makeText(getApplicationContext(), "Nama yang anda input terlalu panjang !", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> fragmentList = new ArrayList<>();
         private final List<String> stringList = new ArrayList<>();
 
-        public ViewPagerAdapter(FragmentManager manager) {
+        ViewPagerAdapter(FragmentManager manager) {
             super(manager);
         }
 
@@ -95,7 +127,7 @@ public class MainActivity extends AppCompatActivity
             return fragmentList.size();
         }
 
-        public void addFrag(Fragment fragment, String title) {
+        void addFrag(Fragment fragment, String title) {
             fragmentList.add(fragment);
             stringList.add(title);
         }
@@ -108,12 +140,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setMessage("Apa anda yakin Ingin Keluar ? ")
+            alert.setMessage(R.string.exit_msg)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -131,50 +163,35 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_top_rated) {
+            startActivity(new Intent(MainActivity.this, TopRatedActivity.class));
+        } else if (id == R.id.nav_search) {
+            startActivity(new Intent(MainActivity.this, ActivitySearchNav.class));
+        } else if (id == R.id.nav_about) {
+            startActivity(new Intent(MainActivity.this, AboutActivity.class));
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            Intent intent;
+            String publisher = "arjavax";
+            try {
+                intent = new Intent(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setData(Uri.parse("market://search?q=pub:" + publisher));
+                startActivity(intent);
+            } catch (android.content.ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/search?q=pub:" + publisher)));
+            }
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }

@@ -8,12 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_main"
-        android:id="@+id/frameRecycler"
+        android:id="@+id/frameRecyclerUp"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
         <android.support.v7.widget.RecyclerView
             android:padding="@dimen/padding_main"
-            android:id="@+id/recyclerView"
+            android:id="@+id/recyclerViewUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             xmlns:android="http://schemas.android.com/apk/res/android">
@@ -26,7 +26,7 @@
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/progressBarMain"
+        android:id="@+id/progressBarMainUp"
         android:layout_centerInParent="true" />
 
 </RelativeLayout>

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.arjava.dcodingcatmovieuiux.R;
 import com.bumptech.glide.Glide;
 
-/**
+/*
  * Created by arjava on 11/18/17.
  */
 
@@ -18,7 +18,10 @@ public class DetailsMovie extends AppCompatActivity {
 
     //create object
     ImageView imageViewDetails;
-    TextView textViewVote, textViewTitle, textViewOverview;
+    TextView textViewVote;
+    TextView textViewTitle;
+    TextView textViewOverview;
+
     String url_image = "http://image.tmdb.org/t/p/w342/";
 
     @Override
@@ -27,22 +30,24 @@ public class DetailsMovie extends AppCompatActivity {
         setContentView(R.layout.activity_detail_movie);
 
         //inisiasi
-        imageViewDetails = (ImageView) findViewById(R.id.imageViewDetails);
-        textViewVote = (TextView) findViewById(R.id.textViewVote);
-        textViewTitle = (TextView) findViewById(R.id.textTitleDetails);
-        textViewOverview = (TextView) findViewById(R.id.overViewDetails);
+        imageViewDetails = findViewById(R.id.imageViewDetails);
+        textViewVote = findViewById(R.id.textViewVote);
+        textViewTitle = findViewById(R.id.textTitleDetails);
+        textViewOverview = findViewById(R.id.overViewDetails);
 
         //set actionbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.app_name);
 
         //get intent data
         Intent movie = getIntent();
         final String titleOri = movie.getStringExtra("orititle");
         final Double voteAvg = movie.getDoubleExtra("vote",0.0);
         final String overview = movie.getStringExtra("overview");
-        final String poster_path = movie.getStringExtra("poster");
-        final String imageLoad = url_image+poster_path;
+        final String backdrop_path = movie.getStringExtra("backdrop");
+        final String imageLoad = url_image+backdrop_path;
+
+        //set title actionbar
+        getSupportActionBar().setTitle(titleOri);
 
         //show image use library
         Glide

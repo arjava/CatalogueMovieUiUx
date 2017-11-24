@@ -43,20 +43,20 @@ public class UpcomingFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadMovieNow();
+        loadUpcomingMovie();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        progresBar = (ProgressBar) view.findViewById(R.id.progressBarMain);
+        progresBar = (ProgressBar) view.findViewById(R.id.progressBarMainUp);
         return view;
     }
 
-    private void loadMovieNow() {
+    private void loadUpcomingMovie() {
 
         progresBar.setVisibility(View.VISIBLE);
-        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerViewUp);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ApiInterface apiInterface = ApiClient.getRetrofit(getContext()).create(ApiInterface.class);
         Call<MovieItems> call = apiInterface.getMovieUpcoming();

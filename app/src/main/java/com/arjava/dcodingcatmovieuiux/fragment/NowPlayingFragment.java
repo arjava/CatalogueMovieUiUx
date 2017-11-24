@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
+/*
  * Created by arjava on 11/20/17.
  */
 
@@ -38,25 +38,26 @@ public class NowPlayingFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        loadMovieNow();
+            loadMovieNow();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nowplaying, container, false);
-        progresBar = (ProgressBar) view.findViewById(R.id.progressBarMain);
+        progresBar = view.findViewById(R.id.progressBarMain);
         return view;
     }
 
     private void loadMovieNow() {
 
         progresBar.setVisibility(View.VISIBLE);
-        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView);
+        final RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ApiInterface apiInterface = ApiClient.getRetrofit(getContext()).create(ApiInterface.class);
         Call<MovieItems> call = apiInterface.getNowPlaying();
@@ -65,12 +66,12 @@ public class NowPlayingFragment extends Fragment {
             @Override
             public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
                 MovieItems data = response.body();
-                if (data.getResults().size()==0) {
+                if (data.getResults().size() == 0) {
                     Toast.makeText(getContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
                     progresBar.setVisibility(View.GONE);
-                }else {
+                } else {
                     recyclerView.setAdapter(new MovieAdapter(data.getResults(), R.layout.content_recycler, getContext()));
-                    Log.e(TAG, "onResponse: hasil pemanggilan"+ call);
+                    Log.e(TAG, "onResponse: hasil pemanggilan" + call);
                     progresBar.setVisibility(View.GONE);
                 }
             }

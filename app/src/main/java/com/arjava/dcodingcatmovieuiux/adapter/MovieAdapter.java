@@ -6,11 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.arjava.dcodingcatmovieuiux.listener.ItemClickListener;
 import com.arjava.dcodingcatmovieuiux.R;
 import com.arjava.dcodingcatmovieuiux.activity.DetailsMovie;
 import com.arjava.dcodingcatmovieuiux.model.MovieItems;
@@ -18,19 +18,16 @@ import com.bumptech.glide.Glide;
 
 import java.util.List;
 
-/**
+/*
  * Created by arjava on 11/15/17.
  */
 
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    //create Object
+    //create Object inisiasi
     private List<MovieItems.ResultsBean> movieItemsList;
     private int rowLayout;
     private Context context;
-    private static final String TAG = MovieAdapter.class.getSimpleName();
-    private ItemClickListener recyclerViewItemClickListener;
-    private String url_image = "http://image.tmdb.org/t/p/w342/";
 
     //konstruktor
     public MovieAdapter(List<MovieItems.ResultsBean> movieItems, int rowLayout, Context context) {
@@ -42,19 +39,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     //mengatur tampilan layout
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(rowLayout, parent, false);
-        final MovieViewHolder movieViewHolder = new MovieViewHolder(view);
-        movieViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int adapterPosition = movieViewHolder.getAdapterPosition();
-                if (adapterPosition != RecyclerView.NO_POSITION) {
-//                    recyclerViewItemClickListener.onItemClick(adapterPosition, movieViewHolder.itemView);
-                }
-            }
-        });
-        return movieViewHolder;
+        return new MovieViewHolder(view);
     }
 
     //menampilkan hasil dari data yang kita ambil dari API
@@ -67,7 +53,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
         final MovieAdapter.MovieViewHolder movieViewHolder = (MovieAdapter.MovieViewHolder) holder;
         //poster_id (untuk mengambil gambar)
         final String id_poster = result.getPoster_path();
-        final String poster_image = url_image+id_poster;
+        String url_image = "http://image.tmdb.org/t/p/w342/";
+        final String poster_image = url_image +id_poster;
 
         //menampilkan ke dalam textView
         movieViewHolder.textViewTitle.setText(result.getTitle());
@@ -83,8 +70,8 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                 .placeholder(R.drawable.ic_toys_green_300_24dp)
                 .into(movieViewHolder.imageView);
 
-        //penanganan ketika layout diklik
-        movieViewHolder.linearLayout.setOnClickListener(new View.OnClickListener() {
+        //penanganan ketika button detail diklik
+        movieViewHolder.detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent det = new Intent(view.getContext(), DetailsMovie.class);
@@ -98,23 +85,42 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             }
         });
 
+        //penanganan ketika button share diklik
+        movieViewHolder.share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String base_url_info_film = "https://www.themoviedb.org/movie/";
+
+                // share url_info_film menggunakan intent
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(Intent.EXTRA_TEXT, base_url_info_film+result.getId());
+                view.getContext().startActivity(Intent.createChooser(sharingIntent, "Share via"));
+
+            }
+        });
+
     }
 
-    //inisiasi object
+    //inisiasi object view
     static class MovieViewHolder extends RecyclerView.ViewHolder {
 
         LinearLayout linearLayout;
         ImageView imageView;
         TextView textViewTitle, textViewDescription, textViewdate;
+        Button detail, share;
 
-        public MovieViewHolder(View itemView) {
+        MovieViewHolder(View itemView) {
             super(itemView);
 
-            linearLayout = (LinearLayout) itemView.findViewById(R.id.linearLayoutContentMovie);
-            imageView = (ImageView) itemView.findViewById(R.id.imageViewItemMovie);
-            textViewTitle = (TextView) itemView.findViewById(R.id.textViewItemTitle);
-            textViewDescription = (TextView) itemView.findViewById(R.id.textViewItemDesc);
-            textViewdate = (TextView) itemView.findViewById(R.id.textViewItemDate);
+            linearLayout = itemView.findViewById(R.id.linearLayoutContentMovie);
+            imageView = itemView.findViewById(R.id.imageViewItemMovie);
+            textViewTitle = itemView.findViewById(R.id.textViewItemTitle);
+            textViewDescription = itemView.findViewById(R.id.textViewItemDesc);
+            textViewdate = itemView.findViewById(R.id.textViewItemDate);
+            detail = itemView.findViewById(R.id.btnDetail);
+            share = itemView.findViewById(R.id.btnShare);
 
         }
     }

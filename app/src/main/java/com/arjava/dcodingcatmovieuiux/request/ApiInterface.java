@@ -24,6 +24,18 @@ public interface ApiInterface {
     Call<MovieItems> getMovieUpcoming();
 
     //endpoint untuk now playing
-    @GET("/3/movie/now_playing?api_key="+ BuildConfig.API_KEY +"&language=en-US")
+    @GET("/3/movie/now_playing?api_key="+ BuildConfig.API_KEY +"&language=en-ID")
     Call<MovieItems> getNowPlaying();
+
+    //endpoint untuk top rated
+    @GET("/3/movie/top_rated?api_key="+ BuildConfig.API_KEY + "&language=en-US")
+    Call<MovieItems> getTopRated();
+
+    //endpoint untuk popular
+    @GET("/3/movie/popular?api_key="+ BuildConfig.API_KEY + "&language=en-US")
+    Call<MovieItems> getPopular();
+
+    //endpoint untuk latest
+    @GET("/3/movie/latest?api_key="+ BuildConfig.API_KEY + "&language=en-US")
+    Call<MovieItems> getLatest();
 }
