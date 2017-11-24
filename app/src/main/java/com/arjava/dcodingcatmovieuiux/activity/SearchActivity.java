@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.arjava.dcodingcatmovieuiux.R;
 import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
-import com.arjava.dcodingcatmovieuiux.model.MovieItems;
+import com.arjava.dcodingcatmovieuiux.model.MovieModel;
 import com.arjava.dcodingcatmovieuiux.request.ApiClient;
 import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
 
@@ -68,15 +68,15 @@ public class SearchActivity extends AppCompatActivity {
         ApiInterface apiInterface = ApiClient.getRetrofit(getApplicationContext()).create(ApiInterface.class);
 
         //call api_interface use parameter searching
-        Call<MovieItems> call = apiInterface.getMovieItems(input_movie);
-        call.enqueue(new Callback<MovieItems>() {
+        Call<MovieModel> call = apiInterface.getMovieItems(input_movie);
+        call.enqueue(new Callback<MovieModel>() {
 
             //on success request to server
             @Override
-            public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
-                MovieItems data = response.body();
+            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+                MovieModel data = response.body();
                 if (data.getResults().size()==0) {
-                    Toast.makeText(getApplicationContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.data_nothing, Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
                 }else {
                     recyclerView.setAdapter(new MovieAdapter(data.getResults(), R.layout.content_recycler, getApplicationContext()));
@@ -87,7 +87,7 @@ public class SearchActivity extends AppCompatActivity {
 
             // on failed request to server
             @Override
-            public void onFailure(Call<MovieItems> call, Throwable t) {
+            public void onFailure(Call<MovieModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, t.toString());
                 progressBar.setVisibility(View.GONE);

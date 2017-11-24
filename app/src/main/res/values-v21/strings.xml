@@ -24,4 +24,5 @@
     <string name="search_nav">Search Movie</string>
     <string name="app_description">Movie list app.\nThere is a list of the highest ratings, there is a list of upcoming movies, as well as movies being aired.\nIn addition you can also search for movies by entering the title of the movie.</string>
     <string name="exit_msg">Are you sure you want to Quit?</string>
+    <string name="data_nothing">sorry the data you are looking for is not found</string>
 </resources>

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.arjava.dcodingcatmovieuiux.R;
 import com.arjava.dcodingcatmovieuiux.activity.DetailsMovie;
-import com.arjava.dcodingcatmovieuiux.model.MovieItems;
+import com.arjava.dcodingcatmovieuiux.model.MovieModel;
 import com.bumptech.glide.Glide;
 
 import java.util.List;
@@ -25,12 +25,12 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     //create Object inisiasi
-    private List<MovieItems.ResultsBean> movieItemsList;
+    private List<MovieModel.ResultsBean> movieItemsList;
     private int rowLayout;
     private Context context;
 
     //konstruktor
-    public MovieAdapter(List<MovieItems.ResultsBean> movieItems, int rowLayout, Context context) {
+    public MovieAdapter(List<MovieModel.ResultsBean> movieItems, int rowLayout, Context context) {
         this.movieItemsList = movieItems;
         this.rowLayout = rowLayout;
         this.context = context;
@@ -48,7 +48,7 @@ public class MovieAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         //mengambil posisi
-        final MovieItems.ResultsBean result = movieItemsList.get(position);
+        final MovieModel.ResultsBean result = movieItemsList.get(position);
         //membuat holder
         final MovieAdapter.MovieViewHolder movieViewHolder = (MovieAdapter.MovieViewHolder) holder;
         //poster_id (untuk mengambil gambar)

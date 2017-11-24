@@ -33,7 +33,6 @@
             android:id="@+id/btnSearch"
             android:layout_weight="3"
             android:text="@string/search"
-            android:layout_toRightOf="@+id/edtSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

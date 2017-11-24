@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.arjava.dcodingcatmovieuiux.R;
 import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
-import com.arjava.dcodingcatmovieuiux.model.MovieItems;
+import com.arjava.dcodingcatmovieuiux.model.MovieModel;
 import com.arjava.dcodingcatmovieuiux.request.ApiClient;
 import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
 
@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
+/*
  * Created by arjava on 11/20/17.
  */
 
@@ -49,22 +49,22 @@ public class UpcomingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_upcoming, container, false);
-        progresBar = (ProgressBar) view.findViewById(R.id.progressBarMainUp);
+        progresBar = view.findViewById(R.id.progressBarMainUp);
         return view;
     }
 
     private void loadUpcomingMovie() {
 
         progresBar.setVisibility(View.VISIBLE);
-        final RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerViewUp);
+        final RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerViewUp);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         ApiInterface apiInterface = ApiClient.getRetrofit(getContext()).create(ApiInterface.class);
-        Call<MovieItems> call = apiInterface.getMovieUpcoming();
-        call.enqueue(new Callback<MovieItems>() {
+        Call<MovieModel> call = apiInterface.getMovieUpcoming();
+        call.enqueue(new Callback<MovieModel>() {
             //ketika server meresponse
             @Override
-            public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
-                MovieItems data = response.body();
+            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+                MovieModel data = response.body();
                 if (data.getResults().size()==0) {
                     Toast.makeText(getContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
                     progresBar.setVisibility(View.GONE);
@@ -77,7 +77,7 @@ public class UpcomingFragment extends Fragment {
 
             //ketika gagal mendapatkan response
             @Override
-            public void onFailure(Call<MovieItems> call, Throwable t) {
+            public void onFailure(Call<MovieModel> call, Throwable t) {
                 Toast.makeText(getContext(), "Gagal", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, t.toString());
                 progresBar.setVisibility(View.GONE);

@@ -16,18 +16,24 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.DetailsMovie" />
-        <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.ActivitySearchNav" />
-        <activity android:name=".activity.TopRatedActivity" />
-        <activity android:name=".activity.AboutActivity"/>
+        <activity android:name=".activity.DetailsMovie"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.SearchActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.ActivitySearchNav"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.TopRatedActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.AboutActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

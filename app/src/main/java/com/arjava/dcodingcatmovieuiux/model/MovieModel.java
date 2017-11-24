@@ -6,7 +6,7 @@ import java.util.List;
  * Created by arjava on 11/13/17.
  */
 
-public class MovieItems {
+public class MovieModel {
 
     private int page;
     private int total_results;

@@ -53,7 +53,7 @@ public class DetailsMovie extends AppCompatActivity {
         Glide
                 .with(DetailsMovie.this)
                 .load(imageLoad)
-                .placeholder(R.drawable.ic_toys_green_300_24dp)
+                .placeholder(R.drawable.thumbnail_details_image)
                 .into(imageViewDetails);
         //show vote @Double
         textViewVote.setText(String.valueOf(voteAvg));

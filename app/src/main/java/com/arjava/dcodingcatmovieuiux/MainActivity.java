@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity
     SearchView searchView;
     NavigationView navigationView;
     private DrawerLayout drawer;
-    public static String cari_film = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -187,6 +186,10 @@ public class MainActivity extends AppCompatActivity
             } catch (android.content.ActivityNotFoundException e) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/search?q=pub:" + publisher)));
             }
+        } else if (id == R.id.nav_language){
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.setClassName("com.android.settings", "com.android.settings.LanguageSettings");
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);

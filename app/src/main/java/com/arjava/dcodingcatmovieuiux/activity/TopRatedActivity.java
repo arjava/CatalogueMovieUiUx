@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.arjava.dcodingcatmovieuiux.R;
 import com.arjava.dcodingcatmovieuiux.adapter.MovieAdapter;
-import com.arjava.dcodingcatmovieuiux.model.MovieItems;
+import com.arjava.dcodingcatmovieuiux.model.MovieModel;
 import com.arjava.dcodingcatmovieuiux.request.ApiClient;
 import com.arjava.dcodingcatmovieuiux.request.ApiInterface;
 
@@ -41,12 +41,12 @@ public class TopRatedActivity extends AppCompatActivity {
         final RecyclerView recyclerView = findViewById(R.id.recyclerViewRated);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         ApiInterface apiInterface = ApiClient.getRetrofit(getApplicationContext()).create(ApiInterface.class);
-        Call<MovieItems> call = apiInterface.getTopRated();
-        call.enqueue(new Callback<MovieItems>() {
+        Call<MovieModel> call = apiInterface.getTopRated();
+        call.enqueue(new Callback<MovieModel>() {
             //ketika server meresponse
             @Override
-            public void onResponse(Call<MovieItems> call, Response<MovieItems> response) {
-                MovieItems data = response.body();
+            public void onResponse(Call<MovieModel> call, Response<MovieModel> response) {
+                MovieModel data = response.body();
                 if (data.getResults().size() == 0) {
                     Toast.makeText(getApplicationContext(), "maaf data yang anda cari tidak ditemukan", Toast.LENGTH_SHORT).show();
                     progressBar.setVisibility(View.GONE);
@@ -58,7 +58,7 @@ public class TopRatedActivity extends AppCompatActivity {
 
             //ketika gagal mendapatkan response
             @Override
-            public void onFailure(Call<MovieItems> call, Throwable t) {
+            public void onFailure(Call<MovieModel> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Gagal", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.GONE);
             }

@@ -27,4 +27,13 @@
         </menu>
     </item>
 
+    <item android:title="@string/action_settings">
+        <menu>
+            <item
+                android:id="@+id/nav_language"
+                android:icon="@drawable/ic_language_white_24dp"
+                android:title="@string/change_language" />
+        </menu>
+    </item>
+
 </menu>
